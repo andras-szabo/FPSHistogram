@@ -9,6 +9,9 @@
 		_midFpsColor("Mid Fps", Color) = (1.0, 1.0, 0.2, 0.5)
 		_lowFpsColor("Low Fps", Color) = (1.0, 0.2, 0.2, 0.5)
 
+		// _FpsRect: this refers to the portion of the quad
+		// which is occupied by the FPS value to display.
+
 		_FpsRectStartX("FpsRectStartX", float) = 0.72
 		_FpsRectStartY("FpsRectStartY", float) = 0.2
 
@@ -45,7 +48,6 @@
 				struct v2f
 				{
 					float2 uv : TEXCOORD0;
-					UNITY_FOG_COORDS(1)
 					float4 vertex : SV_POSITION;
 					float3 packedDigits : TEXCOORD1;
 					float2 digitsToShow : TEXCOORD2;
@@ -70,10 +72,18 @@
 					o.vertex = UnityObjectToClipPos(v.vertex);
 					o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 
+					// Break down the number to display into its
+					// constituent digits. Note that "ones" may
+					// actually contain a number above 9. But this
+					// is fine, because the texture containing the
+					// individual digits from 0-9 in a row wraps
+					// around, so the UV value will still work.
+
 					float hundreds = 0.0;
 					float throwAway = modf(_CurrentFPS / 100.0, hundreds);
 					float tens = 0.0;
 					float ones = modf(_CurrentFPS / 10.0, tens) * 10.0;
+
 
 					o.packedDigits = float3(hundreds, tens, ones);
 

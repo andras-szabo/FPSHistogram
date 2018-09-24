@@ -32,12 +32,12 @@ public class FpsHistogram : MonoBehaviour
 		}
 	}
 
-	private void ShowFpsHistogram(float currentFps, float currentFrameTime)
+	private void ShowFpsHistogram(int framesRenderedInPastSecond, float currentFrameTime)
 	{
 		_pastFps.Push(currentFrameTime);
 		_pastFps.ToArray(_fpsArray);
 
 		fpsHistogramMaterial.SetFloatArray("_FpsArray", _fpsArray);
-		fpsHistogramMaterial.SetFloat("_CurrentFPS", Mathf.Floor(currentFps));
+		fpsHistogramMaterial.SetFloat("_CurrentFPS", (float)framesRenderedInPastSecond);
 	}
 }
